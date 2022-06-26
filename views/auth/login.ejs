@@ -1,17 +1,24 @@
 <main id="main-menu" class="main-active w-full h-screen bg-gray-600 pt-16 duration-300 fixed top-0 lg:static overflow-auto">
   <div class="w-full h-auto p-2 md:p-6">
     <div class="min-h-[550px] md:min-h-[640px] lg:min-h-[500px] bg-gray-800 py-6 px-4 rounded-lg">
-      <form action="" method="post" class="max-w-xl mx-auto">
-        <div class="relative mb-4">
-          <input type="email" id="email" name="email" class="form-input peer" placeholder=" " autocomplete="off" autofocus />
-          <label for="email" class="form-label">Alamat Email</label>
+      <form action="/auth/login" method="post" class="max-w-xl mx-auto">
+        <!-- Alert Success -->
+        <% if (message && message?.status) { %><%- include("../partials/alert-success", { message: message?.value }) %><% } %>
+        <!-- Alert Failed -->
+        <% if (message && !message?.status) { %><%- include("../partials/alert-error", { message: message?.value }) %><% } %>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <div class="relative">
+          <input type="email" id="email" name="email" value="<%= value?.email %>" class="<% if (errors?.email) { %>form-input-error peer<% } else { %>form-input peer<% } %>" placeholder=" " autocomplete="off" autofocus />
+          <label for="email" class="<% if (errors?.email) { %>form-label-error<% } else { %>form-label<% } %>">Alamat Email</label>
         </div>
-        <div class="relative mb-4">
-          <input type="password" id="password" name="password" min="1" max="100" class="form-input peer" placeholder=" " autocomplete="off" />
-          <label for="password" class="form-label">Password</label>
+        <p class="form-message-error"><%= (errors?.email) ? errors?.email?.msg : "" %></p>
+        <div class="relative">
+          <input type="password" id="password" name="password" class="<% if (errors?.password) { %>form-input-error peer<% } else { %>form-input peer<% } %>" placeholder=" " autocomplete="off" />
+          <label for="password" class="<% if (errors?.password) { %>form-label-error<% } else { %>form-label<% } %>">Password</label>
         </div>
+        <p class="form-message-error"><%= (errors?.password) ? errors?.password?.msg : "" %></p>
 
-        <button type="button" class="form-button">Masuk</button>
+        <button type="submit" class="form-button">Masuk</button>
       </form>
     </div>
 
