@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .navlink-active .link-icon {
+    @apply w-6 h-6 fill-white;
+  }
+  .navlink-unactive .link-icon {
+    @apply w-6 h-6 fill-gray-400 group-hover:fill-white;
+  }
+}
+
+@layer components {
+  .navlink-active {
+    @apply w-full flex items-center p-2 text-base font-medium rounded-lg text-white bg-blue-700;
+  }
+  .navlink-unactive {
+    @apply w-full flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-700;
+  }
+
+  .sidebar-active {
+    @apply ml-0 lg:-ml-64;
+  }
+  .sidebar-unactive {
+    @apply -ml-64 lg:ml-0;
+  }
+  .main-active {
+    @apply ml-0 lg:ml-64;
+  }
+  .main-unactive {
+    @apply ml-64 lg:ml-0;
+  }
+
+  .book-parent {
+    @apply w-[50%] lg:w-[25%] p-1 md:p-3;
+  }
+  .book-container {
+    @apply w-full h-auto lg:min-h-[350px] rounded-lg border shadow-md bg-gray-800 border-gray-700;
+  }
+  .book-image {
+    @apply w-full h-32 md:h-52 object-cover rounded-t-lg;
+  }
+  .book-content {
+    @apply p-3 md:p-5;
+  }
+  .book-title {
+    @apply text-sm md:text-xl mb-2 md:mb-3 font-bold text-white;
+  }
+  .book-btn {
+    @apply flex justify-center items-center py-1.5 px-3 text-sm font-medium text-center text-white rounded-lg focus:ring-4 focus:outline-none bg-blue-600 hover:bg-blue-700 focus:ring-blue-900;
+  }
+  .book-manage {
+    @apply w-full flex justify-center items-center py-1.5 px-3 text-sm font-medium text-center text-white rounded-md focus:ring-4 focus:outline-none bg-blue-600 hover:bg-blue-700 focus:ring-blue-900;
+  }
+
+  .col-head {
+    @apply px-6 py-3 whitespace-nowrap;
+  }
+  .col-content {
+    @apply px-6 py-4 whitespace-nowrap;
+  }
+  .row-content {
+    @apply border-b bg-gray-800 border-gray-700;
+  }
+  .confirmation {
+    @apply font-medium text-blue-500 hover:underline;
+  }
+
+  .pagination-previous {
+    @apply py-2 px-3 ml-0 leading-tight rounded-l-lg border bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700 hover:text-white;
+  }
+  .pagination-next {
+    @apply py-2 px-3 leading-tight rounded-r-lg border bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700 hover:text-white;
+  }
+  .pagination-unactive {
+    @apply py-2 px-3 leading-tight border bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700 hover:text-white;
+  }
+  .pagination-active {
+    @apply py-2 px-3 border border-gray-700 bg-gray-700 text-white pointer-events-none;
+  }
+
+  .form-input {
+    @apply block px-2.5 pb-2.5 pt-4 w-full text-sm bg-transparent rounded-lg border appearance-none text-white border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600;
+  }
+  .form-label {
+    @apply absolute text-sm text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-800 px-2 peer-focus:px-2 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1;
+  }
+  .form-label-textarea {
+    @apply absolute text-sm text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-800 px-2 peer-focus:px-2 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-10 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1;
+  }
+  .form-label-image {
+    @apply flex flex-col justify-center items-center w-full h-64 rounded-lg border-2 border-dashed hover:border-solid cursor-pointer hover:bg-gray-800 bg-gray-800 border-gray-600 hover:border-blue-600 text-gray-400 hover:text-white;
+  }
+  .form-button {
+    @apply text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-blue-800;
+  }
+
+  .button-check {
+    @apply focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm p-2 bg-green-600 hover:bg-green-700 focus:ring-green-800;
+  }
+  .button-xmark {
+    @apply focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm p-2 bg-red-600 hover:bg-red-700 focus:ring-red-900;
+  }
+}
+
+* {
+  font-family: "Open Sans", sans-serif;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,19 @@
+<nav class="w-full bg-gray-800 shadow-md fixed z-[999]">
+  <div class="w-full md:w-[300px] py-3 px-4 flex justify-between items-center">
+    <a href="<% if (user?.isAdmin) { %>/admin/borrower<% } else { %>/<% } %>" class="flex items-center bg-gray-700 py-1 px-2 rounded-md">
+      <img class="w-6 h-6 mr-1.5 select-none pointer-events-none" src="/images/logo-smk-Krian-1.png" alt="Logo SMK Krian 1" />
+      <h4 class="text-lg font-medium text-white select-none">SMK KRIAN 1</h4>
+    </a>
+    <button type="button" id="sidebar-btn" class="w-7 h-7 grid grid-cols-3 grid-rows-3 gap-1">
+      <div class="w-full h-full bg-white"></div>
+      <div class="w-full h-full bg-white"></div>
+      <div class="w-full h-full bg-white"></div>
+      <div class="w-full h-full bg-white"></div>
+      <div class="w-full h-full bg-white"></div>
+      <div class="w-full h-full bg-white"></div>
+      <div class="w-full h-full bg-white"></div>
+      <div class="w-full h-full bg-white"></div>
+      <div class="w-full h-full bg-white"></div>
+    </button>
+  </div>
+</nav>

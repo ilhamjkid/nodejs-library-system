@@ -1,0 +1,29 @@
+<main id="main-menu" class="main-active w-full h-screen bg-gray-600 pt-16 duration-300 fixed top-0 lg:static overflow-auto">
+  <div class="w-full h-auto p-2 md:p-6">
+    <div class="min-h-[550px] md:min-h-[640px] lg:min-h-[500px] bg-gray-800 py-6 px-4 rounded-lg">
+      <form action="" method="post" class="max-w-xl mx-auto">
+        <div class="relative mb-4">
+          <input type="text" id="name" name="name" value="Ilham Jaya Kusuma" class="form-input peer" placeholder=" " autocomplete="off" autofocus />
+          <label for="name" class="form-label">Nama Lengkap</label>
+        </div>
+        <div class="relative mb-4">
+          <input type="text" id="grade" name="grade" value="XII RPL 1" class="form-input peer" placeholder=" " autocomplete="off" />
+          <label for="grade" class="form-label">Kelas</label>
+        </div>
+        <div class="relative mb-4">
+          <input type="number" id="absen" name="absen" value="16" min="1" max="100" class="form-input peer" placeholder=" " autocomplete="off" />
+          <label for="absen" class="form-label">Nomor Absen</label>
+        </div>
+        <div class="relative mb-4">
+          <textarea id="bio" name="bio" class="form-input peer" placeholder=" " rows="4" autocomplete="off">Saya adalah manusia pengangguran yang masih kesusahan dalam mencari pekerjaan.</textarea>
+          <label for="bio" class="form-label-textarea">Bio Pribadi</label>
+        </div>
+
+        <button type="button" class="form-button">Ubah Profil</button>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <%- include("../partials/footer") %>
+  </div>
+</main>
