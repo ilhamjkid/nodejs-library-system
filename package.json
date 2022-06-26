@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node ./index.js",
     "dev": "nodemon ./index.js",
-    "build": "yarn tailwindcss -i ./index.css -o ./public/css/tailwind.css --watch"
+    "build-tailwind": "yarn tailwindcss -i ./index.css -o ./public/css/tailwind.css --watch"
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.2",
