@@ -58,7 +58,7 @@ exports.postRegister = (req, res, next) => {
         secretToken: null,
         isAdmin: false,
       }).then(() => {
-        req.flash("success", "Berhasil mendaftar, Silahkan login!");
+        req.flash("success", "Berhasil mendaftar. Silahkan login!");
         return res.redirect("/auth/login");
       });
     })

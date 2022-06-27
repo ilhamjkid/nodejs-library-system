@@ -99,7 +99,10 @@
     @apply absolute text-sm text-red-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-800 px-2 peer-focus:px-2 peer-focus:text-red-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-10 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1;
   }
   .form-label-image {
-    @apply flex flex-col justify-center items-center w-full h-64 rounded-lg border-2 border-dashed hover:border-solid cursor-pointer hover:bg-gray-800 bg-gray-800 border-gray-600 hover:border-blue-600 text-gray-400 hover:text-white;
+    @apply flex flex-col justify-center items-center w-full h-48 rounded-lg border-2 border-dashed hover:border-solid cursor-pointer hover:bg-gray-800 bg-gray-800 border-gray-600 hover:border-blue-600 text-gray-400 hover:text-white;
+  }
+  .form-label-image-error {
+    @apply flex flex-col justify-center items-center w-full h-48 rounded-lg border-2 border-solid cursor-pointer hover:bg-gray-800 bg-gray-800 border-red-600 text-white;
   }
   .form-button {
     @apply text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-blue-800;

@@ -1,68 +1,49 @@
 <main id="main-menu" class="main-active w-full h-screen bg-gray-600 pt-16 duration-300 fixed top-0 lg:static overflow-auto">
   <div class="w-full h-auto p-1 md:p-3">
+    <% if (message) { %>
+    <div class="w-full h-auto flex justify-center items-center">
+      <!-- Alert Success -->
+      <% if (message?.status) { %><%- include("../partials/alert-success", { message: message?.value }) %><% } %>
+      <!-- Alert Failed -->
+      <% if (!message?.status) { %><%- include("../partials/alert-error", { message: message?.value }) %><% } %>
+    </div>
+    <% } %> <% if (books.length > 0) { %>
     <div class="w-full h-auto flex flex-wrap justify-start items-start mb-4 md:mb-6">
+      <% books.forEach((book) => { %>
       <div class="book-parent">
         <div class="book-container">
-          <img class="book-image" src="https://source.unsplash.com/random/250x250/?book" alt="" />
+          <img class="book-image" src="/<%= book.image %>" alt="<%= book.title %>" />
           <div class="book-content">
-            <h4 class="book-title">Noteworthy technology</h4>
+            <h4 class="book-title"><%= book.title %></h4>
             <div class="flex justify-between items-center">
-              <div class="w-full mr-1"><a href="/admin/books/edit/1" class="book-manage">Ubah</a></div>
-              <form action="" method="post" class="w-full ml-1">
-                <button type="button" class="book-manage">Hapus</button>
+              <div class="w-full mr-1"><a href="/admin/books/edit/<%= book._id %>" class="book-manage">Ubah</a></div>
+              <form action="/admin/books/delete" method="post" class="w-full ml-1" onsubmit="return confirm('Yakin mau dihapus?')">
+                <input type="hidden" name="_method" value="delete" />
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <input type="hidden" name="bookId" value="<%= book._id %>" />
+                <button type="submit" class="book-manage">Hapus</button>
               </form>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="book-parent">
-        <div class="book-container">
-          <img class="book-image" src="https://source.unsplash.com/random/250x250/?book" alt="" />
-          <div class="book-content">
-            <h4 class="book-title">Noteworthy technology</h4>
-            <div class="flex justify-between items-center">
-              <div class="w-full mr-1"><a href="/admin/books/edit/2" class="book-manage">Ubah</a></div>
-              <form action="" method="post" class="w-full ml-1">
-                <button type="button" class="book-manage">Hapus</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="book-parent">
-        <div class="book-container">
-          <img class="book-image" src="https://source.unsplash.com/random/250x250/?book" alt="" />
-          <div class="book-content">
-            <h4 class="book-title">Noteworthy</h4>
-            <div class="flex justify-between items-center">
-              <div class="w-full mr-1"><a href="/admin/books/edit/3" class="book-manage">Ubah</a></div>
-              <form action="" method="post" class="w-full ml-1">
-                <button type="button" class="book-manage">Hapus</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="book-parent">
-        <div class="book-container">
-          <img class="book-image" src="https://source.unsplash.com/random/250x250/?book" alt="" />
-          <div class="book-content">
-            <h4 class="book-title">Noteworthy technology</h4>
-            <div class="flex justify-between items-center">
-              <div class="w-full mr-1"><a href="/admin/books/edit/4" class="book-manage">Ubah</a></div>
-              <form action="" method="post" class="w-full ml-1">
-                <button type="button" class="book-manage">Hapus</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+      <% }) %>
     </div>
 
-    <%- include("../partials/pagination") %>
+    <!--  -->
+    <% if (totalItems > itemsPerPage) { %>
+    <!-- Start Pagination -->
+    <%- include("../partials/pagination", {...pagination}) %>
+    <!-- End pagination -->
+    <% } %>
+    <!--  -->
+
+    <% } else { %>
+    <div class="w-full h-auto flex flex-col justify-center items-center">
+      <h4 class="text-8xl md:text-9xl text-center mb-3 md:mb-5">👀</h4>
+      <h5 class="text-2xl md:text-4xl text-center font-semibold text-white">Data Kosong</h5>
+    </div>
+    <% } %>
 
     <!-- Footer -->
     <%- include("../partials/footer") %>

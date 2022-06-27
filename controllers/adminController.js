@@ -1,7 +1,13 @@
 const User = require("../models/User");
+const Book = require("../models/Book");
+
+const path = require("path");
+const fs = require("fs/promises");
 
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
+
+const rootDir = require("../helpers/rootDir");
 
 const { NODE_ENV, SECRET_TOKEN, EXPIRES_JWT, MAX_AGE_COOKIE } = process.env;
 
@@ -37,11 +43,48 @@ exports.getOrders = (req, res, next) => {
  * @access  Private
  */
 exports.getBookList = (req, res, next) => {
-  res.status(200).render("admin/book-list", {
-    layout: "layouts/main",
-    pageTitle: "Daftar Buku",
-    path: "/admin/books",
-  });
+  let message = null;
+  const errorMessage = req.flash("error")[0];
+  const successMessage = req.flash("success")[0];
+  if (errorMessage) {
+    message = { status: false, value: errorMessage };
+  } else if (successMessage) {
+    message = { status: true, value: successMessage };
+  }
+  const activePage = +req?.query?.page || 1;
+  const itemsPerPage = 8;
+  let totalItems;
+  Book.countDocuments()
+    .then((numBooks) => {
+      totalItems = numBooks;
+      return Book.find()
+        .skip((activePage - 1) * itemsPerPage)
+        .limit(itemsPerPage);
+    })
+    .then((books) => {
+      res.status(200).render("admin/book-list", {
+        layout: "layouts/main",
+        pageTitle: "Daftar Buku",
+        path: "/admin/books",
+        message,
+        books,
+        totalItems,
+        itemsPerPage,
+        pagination: {
+          currentPage: activePage,
+          hasNextPage: itemsPerPage * activePage < totalItems,
+          hasPreviousPage: activePage > 1,
+          nextPage: activePage + 1,
+          previousPage: activePage - 1,
+          lastPage: Math.ceil(totalItems / itemsPerPage),
+        },
+      });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
+    });
 };
 
 /**
@@ -50,11 +93,71 @@ exports.getBookList = (req, res, next) => {
  * @access  Private
  */
 exports.getBookAdd = (req, res, next) => {
+  let message = null;
+  const errorMessage = req.flash("error")[0];
+  const successMessage = req.flash("success")[0];
+  if (errorMessage) {
+    message = { status: false, value: errorMessage };
+  } else if (successMessage) {
+    message = { status: true, value: successMessage };
+  }
   res.status(200).render("admin/book-manage", {
     layout: "layouts/main",
     pageTitle: "Tambah Buku",
     path: "/admin/books/create",
+    editing: false,
+    message,
+    value: null,
+    errors: null,
   });
+};
+
+/**
+ * @desc    Handling Book Create
+ * @route   POST "/admin/books/create"
+ * @access  Private
+ */
+exports.postBookAdd = (req, res, next) => {
+  const fileImage = req.file;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    if (fileImage) {
+      const filePath = path.join(rootDir, "uploads", "images", fileImage.filename);
+      return fs.unlink(filePath).then(() => {
+        return res.status(422).render("admin/book-manage", {
+          layout: "layouts/main",
+          pageTitle: "Tambah Buku",
+          path: "/admin/books/create",
+          editing: false,
+          message: { status: false, value: "Gagal menambahkan buku." },
+          value: { title: req?.body?.title },
+          errors: errors.mapped(),
+        });
+      });
+    }
+    return res.status(422).render("admin/book-manage", {
+      layout: "layouts/main",
+      pageTitle: "Tambah Buku",
+      path: "/admin/books/create",
+      editing: false,
+      message: { status: false, value: "Gagal menambahkan buku." },
+      value: { title: req?.body?.title },
+      errors: errors.mapped(),
+    });
+  }
+  Book.create({
+    title: req.body.title,
+    image: `images/${fileImage.filename}`,
+  })
+    .then(() => {
+      req.flash("success", "Berhasil menambahkan buku.");
+      res.redirect("/admin/books");
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
+    });
 };
 
 /**
@@ -63,11 +166,110 @@ exports.getBookAdd = (req, res, next) => {
  * @access  Private
  */
 exports.getBookEdit = (req, res, next) => {
-  res.status(200).render("admin/book-manage", {
-    layout: "layouts/main",
-    pageTitle: "Ubah Buku " + req.params.bookId,
-    path: "/admin/books",
-  });
+  let message = null;
+  const errorMessage = req.flash("error")[0];
+  const successMessage = req.flash("success")[0];
+  if (errorMessage) {
+    message = { status: false, value: errorMessage };
+  } else if (successMessage) {
+    message = { status: true, value: successMessage };
+  }
+  Book.findById(req?.params?.bookId)
+    .then((book) => {
+      if (!book) throw "Buku tidak ditemukan.";
+      res.status(200).render("admin/book-manage", {
+        layout: "layouts/main",
+        pageTitle: "Ubah Buku " + book.title,
+        path: "/admin/books",
+        editing: true,
+        message,
+        value: book,
+        errors: null,
+      });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
+    });
+};
+
+/**
+ * @desc    Handling Book Update
+ * @route   PUT "/admin/books/edit/:bookId?_method=put"
+ * @access  Private
+ */
+exports.putBookEdit = (req, res, next) => {
+  const fileImage = req.file;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    if (fileImage) {
+      const filePath = path.join(rootDir, "uploads", "images", fileImage.filename);
+      return fs.unlink(filePath).then(() => {
+        return res.status(422).render("admin/book-manage", {
+          layout: "layouts/main",
+          pageTitle: "Ubah Buku " + req?.body?.title,
+          path: "/admin/books",
+          editing: true,
+          message: { status: false, value: "Gagal mengubah buku." },
+          value: { _id: req?.params?.bookId, title: req?.body?.title },
+          errors: errors.mapped(),
+        });
+      });
+    }
+    return res.status(422).render("admin/book-manage", {
+      layout: "layouts/main",
+      pageTitle: "Ubah Buku " + req?.body?.title,
+      path: "/admin/books",
+      editing: true,
+      message: { status: false, value: "Gagal mengubah buku." },
+      value: { _id: req?.params?.bookId, title: req?.body?.title },
+      errors: errors.mapped(),
+    });
+  }
+  Book.findById(req?.params?.bookId)
+    .then((book) => {
+      if (!book) throw "Buku tidak ditemukan.";
+      return fs
+        .unlink(path.join(rootDir, "uploads", book.image))
+        .then(() => {
+          book.title = req?.body?.title;
+          book.image = `images/${fileImage.filename}`;
+          return book.save();
+        })
+        .then(() => {
+          req.flash("success", "Berhasil mengubah buku.");
+          res.redirect("/admin/books");
+        });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
+    });
+};
+
+/**
+ * @desc    Handling Book Delete
+ * @route   DELETE "/admin/books/delete"
+ * @access  Private
+ */
+exports.deleteBook = (req, res, next) => {
+  Book.findById(req?.body?.bookId)
+    .then((book) => {
+      if (!book) throw "Buku tidak ditemukan.";
+      fs.unlink(path.join(rootDir, "uploads", book.image))
+        .then(() => book.remove())
+        .then(() => {
+          req.flash("success", "Berhasil menghapus buku.");
+          res.redirect("/admin/books");
+        });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
+    });
 };
 
 /**
@@ -107,7 +309,7 @@ exports.putProfile = (req, res, next) => {
       layout: "layouts/main",
       pageTitle: "Profil Admin",
       path: "/admin/profiles",
-      message: { status: false, value: "Gagal mengubah profil!" },
+      message: { status: false, value: "Gagal mengubah profil." },
       value: { name, position, code, bio },
       errors: errors.mapped(),
     });

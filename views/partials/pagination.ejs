@@ -1,11 +1,19 @@
 <nav class="flex justify-center px-1">
   <ul class="inline-flex -space-x-px overflow-auto">
-    <li><a href="" class="pagination-previous">Sebelumnya</a></li>
-    <li><a href="" class="pagination-unactive">1</a></li>
-    <li><a href="" class="pagination-unactive">2</a></li>
-    <li><a href="" class="pagination-active">3</a></li>
-    <li><a href="" class="pagination-unactive">4</a></li>
-    <li><a href="" class="pagination-unactive">5</a></li>
-    <li><a href="" class="pagination-next">Selanjutnya</a></li>
+    <li><a href="<% if (currentPage === 2) { %><%= path %><% } else { %>?page=<%= currentPage - 1 %><% } %>" class="pagination-previous<% if (1 === currentPage) { %> pointer-events-none<% } %>">Sebelumnya</a></li>
+    <% if (currentPage !== 1 && previousPage !== 1) { %>
+    <li><a href="<%= path %>" class="pagination-unactive">1</a></li>
+    <li><a href="..." class="pagination-unactive pointer-events-none">...</a></li>
+    <% } %><% if (hasPreviousPage) { %>
+    <li><a href="<% if (previousPage === 1) { %><%= path %><% } else { %>?page=<%= previousPage %><% } %>" class="pagination-unactive"><%= previousPage %></a></li>
+    <% } %>
+    <li><a href="..." class="pagination-active pointer-events-none"><%= currentPage %></a></li>
+    <% if (hasNextPage) { %>
+    <li><a href="?page=<%= nextPage %>" class="pagination-unactive"><%= nextPage %></a></li>
+    <% } %><% if (lastPage !== currentPage && nextPage !== lastPage) { %>
+    <li><a href="..." class="pagination-unactive pointer-events-none">...</a></li>
+    <li><a href="?page=<%= lastPage %>" class="pagination-unactive"><%= lastPage %></a></li>
+    <% } %>
+    <li><a href="?page=<%= currentPage + 1 %>" class="pagination-next<% if (lastPage === currentPage) { %> pointer-events-none<% } %>">Selanjutnya</a></li>
   </ul>
 </nav>

@@ -68,7 +68,7 @@ exports.putProfile = (req, res, next) => {
       layout: "layouts/main",
       pageTitle: "Profil Pengguna",
       path: "/profiles",
-      message: { status: false, value: "Gagal mengubah profil!" },
+      message: { status: false, value: "Gagal mengubah profil." },
       value: { name, grade, absen, bio },
       errors: errors.mapped(),
     });

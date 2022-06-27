@@ -12,6 +12,7 @@
           <label for="email" class="<% if (errors?.email) { %>form-label-error<% } else { %>form-label<% } %>">Alamat Email</label>
         </div>
         <p class="form-message-error"><%= (errors?.email) ? errors?.email?.msg : "" %></p>
+
         <div class="relative">
           <input type="password" id="password" name="password" class="<% if (errors?.password) { %>form-input-error peer<% } else { %>form-input peer<% } %>" placeholder=" " autocomplete="off" />
           <label for="password" class="<% if (errors?.password) { %>form-label-error<% } else { %>form-label<% } %>">Password</label>

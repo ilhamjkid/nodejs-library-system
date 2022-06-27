@@ -1422,7 +1422,7 @@ select {
 
 .form-label-image {
   display: flex;
-  height: 16rem;
+  height: 12rem;
   width: 100%;
   cursor: pointer;
   flex-direction: column;
@@ -1447,6 +1447,30 @@ select {
   background-color: rgb(31 41 55 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.form-label-image-error {
+  display: flex;
+  height: 12rem;
+  width: 100%;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border-width: 2px;
+  border-style: solid;
+  --tw-border-opacity: 1;
+  border-color: rgb(220 38 38 / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.form-label-image-error:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
 }
 
 .form-button {
@@ -1683,6 +1707,10 @@ select {
   margin-right: 0.375rem;
 }
 
+.mt-3 {
+  margin-top: 0.75rem;
+}
+
 .block {
   display: block;
 }
@@ -1741,6 +1769,10 @@ select {
 
 .min-h-\[550px\] {
   min-height: 550px;
+}
+
+.min-h-\[300px\] {
+  min-height: 300px;
 }
 
 .w-full {
@@ -2343,6 +2375,10 @@ select {
     margin-bottom: 0.5rem;
   }
 
+  .md\:mb-5 {
+    margin-bottom: 1.25rem;
+  }
+
   .md\:min-h-\[640px\] {
     min-height: 640px;
   }
@@ -2357,6 +2393,16 @@ select {
 
   .md\:p-6 {
     padding: 1.5rem;
+  }
+
+  .md\:text-9xl {
+    font-size: 8rem;
+    line-height: 1;
+  }
+
+  .md\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 }
 

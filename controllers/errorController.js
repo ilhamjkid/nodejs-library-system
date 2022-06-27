@@ -23,9 +23,10 @@ exports.get404 = (req, res, next) => {
 exports.get500 = (error, req, res, next) => {
   let statusCode, errorMessage;
   statusCode = error.statusCode || 500;
-  if (process.env.NODE_ENV === "production") {
-    errorMessage = "Kesalahan Sistem Kami";
-  } else errorMessage = error.message;
+  if (process.env.NODE_ENV !== "production") {
+    errorMessage = error.message;
+    console.log(errorMessage);
+  } else errorMessage = "Kesalahan Sistem Kami";
   res.status(statusCode).render("errors/error", {
     user: null,
     isAuthenticated: false,
