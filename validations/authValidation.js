@@ -9,6 +9,12 @@ exports.checkRegister = [
     .not()
     .isEmpty()
     .withMessage("Nama wajib diisi!")
+    // Check valid name
+    .custom((value) => {
+      if (!/[0-9]/gi.test(value)) return true;
+      return Promise.reject("Nama tidak valid!");
+    })
+    // Check name length
     .isLength({ min: 3, max: 20 })
     .withMessage("Nama harus berisi 3 sampai 20 karakter!"),
   // Validate Email

@@ -1,25 +1,38 @@
 <main id="main-menu" class="main-active w-full h-screen bg-gray-600 pt-16 duration-300 fixed top-0 lg:static overflow-auto">
   <div class="w-full h-auto p-2 md:p-6">
     <div class="min-h-[550px] md:min-h-[640px] lg:min-h-[500px] bg-gray-800 py-6 px-4 rounded-lg">
-      <form action="" method="post" class="max-w-xl mx-auto">
-        <div class="relative mb-4">
-          <input type="text" id="name" name="name" value="Ilham Jaya Kusuma" class="form-input peer" placeholder=" " autocomplete="off" autofocus />
-          <label for="name" class="form-label">Nama Lengkap</label>
+      <form action="/admin/profiles" method="post" class="max-w-xl mx-auto">
+        <!-- Alert Success -->
+        <% if (message && message?.status) { %><%- include("../partials/alert-success", { message: message?.value }) %><% } %>
+        <!-- Alert Failed -->
+        <% if (message && !message?.status) { %><%- include("../partials/alert-error", { message: message?.value }) %><% } %>
+        <input type="hidden" name="_method" value="put" />
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <div class="relative">
+          <input type="text" id="name" name="name" value="<%= value?.name ?? user?.name %>" class="<% if (errors?.name) { %>form-input-error peer<% } else { %>form-input peer<% } %>" placeholder=" " autocomplete="off" autofocus />
+          <label for="name" class="<% if (errors?.name) { %>form-label-error<% } else { %>form-label<% } %>">Nama Lengkap</label>
         </div>
-        <div class="relative mb-4">
-          <input type="text" id="position" name="position" value="Guru Informatika" class="form-input peer" placeholder=" " autocomplete="off" />
-          <label for="position" class="form-label">Jabatan</label>
-        </div>
-        <div class="relative mb-4">
-          <input type="number" id="code" name="code" value="125" class="form-input peer" placeholder=" " autocomplete="off" />
-          <label for="code" class="form-label">Kode Guru</label>
-        </div>
-        <div class="relative mb-4">
-          <textarea id="bio" name="bio" class="form-input peer" placeholder=" " rows="4" autocomplete="off">Saya adalah manusia pengangguran yang masih kesusahan dalam mencari pekerjaan.</textarea>
-          <label for="bio" class="form-label-textarea">Bio Pribadi</label>
-        </div>
+        <p class="form-message-error"><%= (errors?.name) ? errors?.name?.msg : "" %></p>
 
-        <button type="button" class="form-button">Ubah Profil</button>
+        <div class="relative">
+          <input type="text" id="position" name="position" value="<%= value?.position ?? user?.profile?.position %>" class="<% if (errors?.position) { %>form-input-error peer<% } else { %>form-input peer<% } %>" placeholder=" " autocomplete="off" />
+          <label for="position" class="<% if (errors?.position) { %>form-label-error<% } else { %>form-label<% } %>">Jabatan</label>
+        </div>
+        <p class="form-message-error"><%= (errors?.position) ? errors?.position?.msg : "" %></p>
+
+        <div class="relative">
+          <input type="number" id="code" name="code" value="<%= value?.code ?? user?.profile?.code %>" class="<% if (errors?.code) { %>form-input-error peer<% } else { %>form-input peer<% } %>" placeholder=" " autocomplete="off" />
+          <label for="code" class="<% if (errors?.code) { %>form-label-error<% } else { %>form-label<% } %>">Kode Guru</label>
+        </div>
+        <p class="form-message-error"><%= (errors?.code) ? errors?.code?.msg : "" %></p>
+
+        <div class="relative">
+          <textarea id="bio" name="bio" class="<% if (errors?.bio) { %>form-input-error peer<% } else { %>form-input peer<% } %>" placeholder=" " rows="4" autocomplete="off"><%= value?.bio ?? user?.profile?.bio %></textarea>
+          <label for="bio" class="<% if (errors?.bio) { %>form-label-textarea-error<% } else { %>form-label-textarea<% } %>">Bio Pribadi</label>
+        </div>
+        <p class="form-message-error"><%= (errors?.bio) ? errors?.bio?.msg : "" %></p>
+
+        <button type="submit" class="form-button">Ubah Profil</button>
       </form>
     </div>
 

@@ -114,32 +114,28 @@ exports.postLogin = (req, res, next) => {
   let secretToken;
   User.findOne({ email })
     .then((user) => {
-      bcrypt
-        .compare(password, user.password)
-        .then((pwMatch) => {
-          if (!pwMatch) {
-            const emailPw = "Email atau Password salah!";
-            return res.status(422).render("auth/login", {
-              layout: "layouts/main",
-              pageTitle: "Masuk",
-              path: "/auth/login",
-              message: { status: false, value: "Gagal masuk. Silahkan coba lagi!" },
-              value: { email: email === "@" ? "" : email, password: null },
-              errors: { email: { msg: emailPw }, password: { msg: emailPw } },
-            });
-          }
-          secretToken = jwt.sign(
-            {
-              name: user.name,
-              email: user.email,
-            },
-            SECRET_TOKEN,
-            { expiresIn: EXPIRES_JWT }
-          );
-          user.secretToken = secretToken;
-          return user.save();
-        })
-        .then((user) => {
+      bcrypt.compare(password, user.password).then((pwMatch) => {
+        if (!pwMatch) {
+          const emailPw = "Email atau Password salah!";
+          return res.status(422).render("auth/login", {
+            layout: "layouts/main",
+            pageTitle: "Masuk",
+            path: "/auth/login",
+            message: { status: false, value: "Gagal masuk. Silahkan coba lagi!" },
+            value: { email: email === "@" ? "" : email, password: null },
+            errors: { email: { msg: emailPw }, password: { msg: emailPw } },
+          });
+        }
+        secretToken = jwt.sign(
+          {
+            name: user.name,
+            email: user.email,
+          },
+          SECRET_TOKEN,
+          { expiresIn: EXPIRES_JWT }
+        );
+        user.secretToken = secretToken;
+        return user.save().then((user) => {
           res.cookie("secretToken", secretToken, {
             httpOnly: true,
             maxAge: parseInt(MAX_AGE_COOKIE),
@@ -148,6 +144,7 @@ exports.postLogin = (req, res, next) => {
           if (!user.isAdmin) return res.redirect("/");
           else return res.redirect("/admin/borrowers");
         });
+      });
     })
     .catch((err) => {
       const error = new Error(err);
