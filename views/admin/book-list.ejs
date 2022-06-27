@@ -7,7 +7,7 @@
       <!-- Alert Failed -->
       <% if (!message?.status) { %><%- include("../partials/alert-error", { message: message?.value }) %><% } %>
     </div>
-    <% } %> <% if (books.length > 0) { %>
+    <% } %><% if (books.length > 0) { %>
     <div class="w-full h-auto flex flex-wrap justify-start items-start mb-4 md:mb-6">
       <% books.forEach((book) => { %>
       <div class="book-parent">

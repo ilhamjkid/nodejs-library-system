@@ -1,5 +1,7 @@
 const User = require("../models/User");
 const Book = require("../models/Book");
+const Order = require("../models/Order");
+const Borrower = require("../models/Borrower");
 
 const path = require("path");
 const fs = require("fs/promises");
@@ -17,11 +19,70 @@ const { NODE_ENV, SECRET_TOKEN, EXPIRES_JWT, MAX_AGE_COOKIE } = process.env;
  * @access  Private
  */
 exports.getBorrower = (req, res, next) => {
-  res.status(200).render("admin/borrower", {
-    layout: "layouts/main",
-    pageTitle: "Daftar Peminjam",
-    path: "/admin/borrowers",
-  });
+  let message = null;
+  const errorMessage = req.flash("error")[0];
+  const successMessage = req.flash("success")[0];
+  if (errorMessage) {
+    message = { status: false, value: errorMessage };
+  } else if (successMessage) {
+    message = { status: true, value: successMessage };
+  }
+  const activePage = +req?.query?.page || 1;
+  const itemsPerPage = 8;
+  let totalItems;
+  Borrower.countDocuments()
+    .then((numBorrowers) => {
+      totalItems = numBorrowers;
+      return Borrower.find()
+        .skip((activePage - 1) * itemsPerPage)
+        .limit(itemsPerPage)
+        .populate("userId bookId");
+    })
+    .then((borrowers) => {
+      res.status(200).render("admin/borrower", {
+        layout: "layouts/main",
+        pageTitle: "Daftar Peminjam",
+        path: "/admin/borrowers",
+        message,
+        borrowers,
+        totalItems,
+        itemsPerPage,
+        pagination: {
+          currentPage: activePage,
+          hasNextPage: itemsPerPage * activePage < totalItems,
+          hasPreviousPage: activePage > 1,
+          nextPage: activePage + 1,
+          previousPage: activePage - 1,
+          lastPage: Math.ceil(totalItems / itemsPerPage),
+        },
+      });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
+    });
+};
+
+/**
+ * @desc    Handling Borrower Confirm
+ * @route   DELETE "/admin/borrowers"
+ * @access  Private
+ */
+exports.confirmBorrower = (req, res, next) => {
+  Borrower.findById(req?.body?.borrowerId)
+    .then((borrower) => {
+      if (!borrower) throw "Peminjam tidak ditemukan.";
+      return borrower.remove().then(() => {
+        req.flash("success", "Berhasil mengkonfirmasi peminjam buku.");
+        return res.redirect("/admin/borrowers");
+      });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
+    });
 };
 
 /**
@@ -30,11 +91,80 @@ exports.getBorrower = (req, res, next) => {
  * @access  Private
  */
 exports.getOrders = (req, res, next) => {
-  res.status(200).render("admin/order", {
-    layout: "layouts/main",
-    pageTitle: "Order Buku",
-    path: "/admin/orders",
-  });
+  let message = null;
+  const errorMessage = req.flash("error")[0];
+  const successMessage = req.flash("success")[0];
+  if (errorMessage) {
+    message = { status: false, value: errorMessage };
+  } else if (successMessage) {
+    message = { status: true, value: successMessage };
+  }
+  Order.find()
+    .populate("userId bookId")
+    .then((orders) => {
+      res.status(200).render("admin/order", {
+        layout: "layouts/main",
+        pageTitle: "Order Buku",
+        path: "/admin/orders",
+        message,
+        orders,
+      });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
+    });
+};
+
+/**
+ * @desc    Handling Order Resolve
+ * @route   POST "/admin/orders"
+ * @access  Private
+ */
+exports.postOrder = (req, res, next) => {
+  let orderDeleted;
+  Order.findById(req?.body?.orderId)
+    .populate("userId bookId")
+    .then((order) => {
+      orderDeleted = order;
+      if (!order) throw "Orderan tidak ditemukan.";
+      return orderDeleted.remove().then(() => {
+        return Borrower.create({
+          userId: order?.userId,
+          bookId: order?.bookId,
+        }).then(() => {
+          req.flash("success", "Berhasil menerima orderan.");
+          return res.redirect("/admin/orders");
+        });
+      });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
+    });
+};
+
+/**
+ * @desc    Handling Order Reject
+ * @route   DELETE "/admin/orders"
+ * @access  Private
+ */
+exports.deleteOrder = (req, res, next) => {
+  Order.findById(req?.body?.orderId)
+    .then((order) => {
+      if (!order) throw "Orderan tidak ditemukan.";
+      return order.remove().then(() => {
+        req.flash("success", "Berhasil menolak orderan.");
+        return res.redirect("/admin/orders");
+      });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
+    });
 };
 
 /**

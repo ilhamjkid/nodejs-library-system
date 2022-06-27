@@ -1,5 +1,3 @@
-const User = require("../models/User");
-
 const { check } = require("express-validator");
 
 exports.checkUpdateProfile = [

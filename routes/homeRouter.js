@@ -8,10 +8,17 @@ const { checkUpdateProfile } = require("../validations/homeValidation");
 
 const router = express.Router();
 
-// "GET => /"
-router.get("/", isAuth, isNotAdmin, homeController.getIndex);
-// "GET => /loans"
-router.get("/loans", isAuth, isNotAdmin, homeController.getLoan);
+router
+  .route("/")
+  // "GET => /"
+  .get(isAuth, isNotAdmin, homeController.getIndex);
+
+router
+  .route("/loans")
+  // "GET => /loans"
+  .get(isAuth, isNotAdmin, homeController.getLoan)
+  // "POST => /loans"
+  .post(isAuth, isNotAdmin, homeController.postLoan);
 
 router
   .route("/profiles")

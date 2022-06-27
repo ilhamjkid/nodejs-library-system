@@ -141,8 +141,13 @@ exports.postLogin = (req, res, next) => {
             maxAge: parseInt(MAX_AGE_COOKIE),
             secure: NODE_ENV !== "production" ? false : true,
           });
-          if (!user.isAdmin) return res.redirect("/");
-          else return res.redirect("/admin/borrowers");
+          if (!user.isAdmin) {
+            req.flash("success", "Berhasil masuk. Silahkan meminjam!");
+            return res.redirect("/");
+          } else {
+            req.flash("success", "Berhasil masuk. Silahkan mengelola perpus!");
+            return res.redirect("/admin/borrowers");
+          }
         });
       });
     })

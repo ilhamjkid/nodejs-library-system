@@ -1,5 +1,13 @@
 <main id="main-menu" class="main-active w-full h-screen bg-gray-600 pt-16 duration-300 fixed top-0 lg:static overflow-auto">
   <div class="w-full h-auto p-2 md:p-6">
+    <% if (message) { %>
+    <div class="w-full h-auto flex justify-center items-center">
+      <!-- Alert Success -->
+      <% if (message?.status) { %><%- include("../partials/alert-success", { message: message?.value }) %><% } %>
+      <!-- Alert Failed -->
+      <% if (!message?.status) { %><%- include("../partials/alert-error", { message: message?.value }) %><% } %>
+    </div>
+    <% } %><% if (borrowers.length > 0) { %>
     <div class="relative overflow-x-auto shadow-md rounded-lg mb-4 md:mb-6">
       <table class="w-full text-sm text-left text-gray-400">
         <thead class="text-xs uppercase bg-gray-700 text-gray-400">
@@ -14,82 +22,40 @@
           </tr>
         </thead>
         <tbody>
+          <% borrowers.forEach((borrower) => { %>
           <tr class="row-content">
-            <th class="col-content">Ilham Jaya Kusuma</th>
-            <td class="col-content">XII RPL 1</td>
-            <td class="col-content">Cara Mendapatkan Kerja</td>
-            <td class="col-content">17-02-2004</td>
+            <th class="col-content"><%= borrower?.userId?.name %></th>
+            <td class="col-content"><%= borrower?.userId?.profile?.grade %> / <%= borrower?.userId?.profile?.absen %></td>
+            <td class="col-content"><%= borrower?.bookId?.title %></td>
+            <td class="col-content"><%= borrower?.createdAt?.toLocaleDateString() %></td>
             <td class="col-content">
-              <form action="" method="post">
-                <button type="button" class="confirmation">Konfirmasi</button>
+              <form action="/admin/borrowers" method="post">
+                <input type="hidden" name="_method" value="delete" />
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <input type="hidden" name="borrowerId" value="<%= borrower?._id %>" />
+                <button type="submit" class="confirmation">Konfirmasi</button>
               </form>
             </td>
           </tr>
-
-          <tr class="row-content">
-            <th class="col-content">Ilham Jaya Kusuma</th>
-            <td class="col-content">XII RPL 1</td>
-            <td class="col-content">Cara Mendapatkan Kerja</td>
-            <td class="col-content">17-02-2004</td>
-            <td class="col-content">
-              <form action="" method="post">
-                <button type="button" class="confirmation">Konfirmasi</button>
-              </form>
-            </td>
-          </tr>
-
-          <tr class="row-content">
-            <th class="col-content">Ilham Jaya Kusuma</th>
-            <td class="col-content">XII RPL 1</td>
-            <td class="col-content">Cara Mendapatkan Kerja</td>
-            <td class="col-content">17-02-2004</td>
-            <td class="col-content">
-              <form action="" method="post">
-                <button type="button" class="confirmation">Konfirmasi</button>
-              </form>
-            </td>
-          </tr>
-
-          <tr class="row-content">
-            <th class="col-content">Ilham Jaya Kusuma</th>
-            <td class="col-content">XII RPL 1</td>
-            <td class="col-content">Cara Mendapatkan Kerja</td>
-            <td class="col-content">17-02-2004</td>
-            <td class="col-content">
-              <form action="" method="post">
-                <button type="button" class="confirmation">Konfirmasi</button>
-              </form>
-            </td>
-          </tr>
-
-          <tr class="row-content">
-            <th class="col-content">Ilham Jaya Kusuma</th>
-            <td class="col-content">XII RPL 1</td>
-            <td class="col-content">Cara Mendapatkan Kerja</td>
-            <td class="col-content">17-02-2004</td>
-            <td class="col-content">
-              <form action="" method="post">
-                <button type="button" class="confirmation">Konfirmasi</button>
-              </form>
-            </td>
-          </tr>
-
-          <tr class="row-content">
-            <th class="col-content">Ilham Jaya Kusuma</th>
-            <td class="col-content">XII RPL 1</td>
-            <td class="col-content">Cara Mendapatkan Kerja</td>
-            <td class="col-content">17-02-2004</td>
-            <td class="col-content">
-              <form action="" method="post">
-                <button type="button" class="confirmation">Konfirmasi</button>
-              </form>
-            </td>
-          </tr>
+          <% }) %>
         </tbody>
       </table>
     </div>
 
-    <%- include("../partials/pagination") %>
+    <!--  -->
+    <% if (totalItems > itemsPerPage) { %>
+    <!-- Start Pagination -->
+    <%- include("../partials/pagination", {...pagination}) %>
+    <!-- End pagination -->
+    <% } %>
+    <!--  -->
+
+    <% } else { %>
+    <div class="w-full h-auto flex flex-col justify-center items-center">
+      <h4 class="text-8xl md:text-9xl text-center mb-3 md:mb-5">👀</h4>
+      <h5 class="text-2xl md:text-4xl text-center font-semibold text-white">Data Kosong</h5>
+    </div>
+    <% } %>
 
     <!-- Footer -->
     <%- include("../partials/footer") %>

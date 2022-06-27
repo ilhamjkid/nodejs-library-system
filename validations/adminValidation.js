@@ -1,5 +1,3 @@
-const User = require("../models/User");
-
 const fsPromises = require("fs/promises");
 
 const { check } = require("express-validator");

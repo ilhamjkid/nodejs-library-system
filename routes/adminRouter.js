@@ -8,12 +8,26 @@ const { checkUpdateProfile, checkManageBook } = require("../validations/adminVal
 
 const router = express.Router();
 
-// "GET => /admin/borrowers"
-router.get("/borrowers", isAuth, isAdmin, adminController.getBorrower);
-// "GET => /admin/orders"
-router.get("/orders", isAuth, isAdmin, adminController.getOrders);
-// "GET => /admin/books"
-router.get("/books", isAuth, isAdmin, adminController.getBookList);
+router
+  .route("/borrowers")
+  // "GET => /admin/borrowers"
+  .get(isAuth, isAdmin, adminController.getBorrower)
+  // "DELETE => /admin/borrowers"
+  .delete(isAuth, isAdmin, adminController.confirmBorrower);
+
+router
+  .route("/orders")
+  // "GET => /admin/orders"
+  .get(isAuth, isAdmin, adminController.getOrders)
+  // "POST => /admin/orders"
+  .post(isAuth, isAdmin, adminController.postOrder)
+  // "DELETE => /admin/orders"
+  .delete(isAuth, isAdmin, adminController.deleteOrder);
+
+router
+  .route("/books")
+  // "GET => /admin/books"
+  .get(isAuth, isAdmin, adminController.getBookList);
 
 router
   .route("/books/create")
